@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pockemon.services.IPockemonService;
 import com.pockemon.model.Pockemon;
 import com.pockemon.model.PockemonApiResponse;
+import com.pockemon.model.PockemonDetailModel;
 
 import java.util.List;
 
@@ -32,6 +33,11 @@ public class pockemonRestController {
 	@GetMapping("/get")
 	public PockemonApiResponse index(@RequestParam String range , @RequestParam String page) {
 		return pockemonService.getPockemonList(range, page);
+	}
+	
+	@GetMapping("/get/{name}")
+	public PockemonDetailModel index(@PathVariable String name) {
+		return pockemonService.getPockemonDetail(name);
 	}
 
 }

@@ -6,7 +6,7 @@ public class PockemonApiResponse {
 	private int count;
 	private String next;
 	private String previous;
-	private List<PockemonApiModel> results;
+	private List<StandarLinkPockemonModel> results;
 
 	public int getCount() {
 		return count;
@@ -32,11 +32,11 @@ public class PockemonApiResponse {
 		this.previous = previous;
 	}
 
-	public List<PockemonApiModel> getResults() {
+	public List<StandarLinkPockemonModel> getResults() {
 		return results;
 	}
 
-	public void setResults(List<PockemonApiModel> results) {
+	public void setResults(List<StandarLinkPockemonModel> results) {
 		this.results = results;
 	}
 

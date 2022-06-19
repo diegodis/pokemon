@@ -1,6 +1,6 @@
 package com.pockemon.model;
 
-public class PockemonApiModel {
+public class StandarLinkPockemonModel {
 	private String name;
 	private String url;
 	
@@ -16,6 +16,4 @@ public class PockemonApiModel {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
-
 }
