@@ -1,6 +1,7 @@
 package com.pockemon.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,6 +21,7 @@ public class PockemonServiceImpl implements IPockemonService {
 
 
 	@Override
+	@Cacheable(cacheNames = "pockemons", key="#page")
 	public PockemonApiResponse getPockemonList(String range, String page) {
 		URL = configProperties.getUrlPockemonsInit().concat("?offset=").concat(range).concat("&limit=").concat(page);
 		System.out.printf("La url quedo %s", URL);
@@ -29,6 +31,7 @@ public class PockemonServiceImpl implements IPockemonService {
 	}
 	
 	@Override
+	@Cacheable(cacheNames = "pockemon", key="#name")
 	public PockemonDetailModel getPockemonDetail(String name){
 		URL = configProperties.getUrlPockemonsInit().concat(name);
 		PockemonDetailModel response = restTemplate.getForObject(URL, PockemonDetailModel.class);
