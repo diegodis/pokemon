@@ -1,42 +1,68 @@
 package com.pockemon.services;
 
+import com.pockemon.model.Metadata;
+import com.pockemon.model.PokemonGeneral;
+import com.pockemon.model.PokemonResponseDto;
+import com.pockemon.model.PokemonsResponseDto;
+import com.pockemon.model.dto.PockemonApiResponse;
+import com.pockemon.model.dto.PockemonDetailModel;
+import com.pockemon.model.dto.StandarLinkPockemonModel;
+import com.pockemon.repository.PokemonRepository;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import com.pockemon.model.PockemonApiResponse;
-import com.pockemon.model.PockemonDetailModel;
-import com.pockemon.properties.ConfigProperties;
 
 @Service
 public class PockemonServiceImpl implements IPockemonService {
 
-	private final RestTemplate restTemplate = new RestTemplate();
-	private String URL;
-	
-	@Autowired
-	ConfigProperties configProperties;
-	
+  @Autowired
+  private PokemonRepository pokemonRepository;
 
+  @Override
+  @Cacheable(cacheNames = "pockemons", key = "{#range, #page}")
+  public PokemonsResponseDto getPockemonList(String range, String page) {
+    PockemonApiResponse response = pokemonRepository.execute(range, page);
 
-	@Override
-	@Cacheable(cacheNames = "pockemons", key="#page")
-	public PockemonApiResponse getPockemonList(String range, String page) {
-		URL = configProperties.getUrlPockemonsInit().concat("?offset=").concat(range).concat("&limit=").concat(page);
-		System.out.printf("La url quedo %s", URL);
-		PockemonApiResponse response = restTemplate.getForObject(URL, PockemonApiResponse.class);
-		System.out.println(response);
-		return response;
-	}
-	
-	@Override
-	@Cacheable(cacheNames = "pockemon", key="#name")
-	public PockemonDetailModel getPockemonDetail(String name){
-		URL = configProperties.getUrlPockemonsInit().concat(name);
-		PockemonDetailModel response = restTemplate.getForObject(URL, PockemonDetailModel.class);
-		System.out.println(response);
-		return response;
-	}
+    return PokemonsResponseDto.builder()
+        .metadata(Metadata.builder()
+            .count(String.valueOf(response.getCount()))
+            .page(page)
+            .range(range)
+            .build())
+        .pokemons(response.getResults().stream().map(pokemon -> buildPokemon(pokemon)).collect(
+            Collectors.toList()))
+        .build();
+  }
+
+  private PokemonGeneral buildPokemon(StandarLinkPockemonModel pokemon) {
+    return PokemonGeneral.builder()
+        .name(pokemon.getName())
+        .id(pokemon.getUrl().split("/")[6])
+        .build();
+  }
+
+  @Override
+  @Cacheable(cacheNames = "pockemon", key = "#name")
+  public PokemonResponseDto getPockemonDetail(String name) {
+    PockemonDetailModel response = pokemonRepository.executeDetail(name);
+
+    return PokemonResponseDto.builder()
+        .id(String.valueOf(response.getId()))
+        .name(response.getName())
+        .height(String.valueOf(response.getHeight()))
+        .weight(String.valueOf(response.getWeight()))
+        .abilities(
+            response.getAbilities().stream().map(abilityName -> abilityName.getAbility().getName())
+                .collect(
+                    Collectors.toList()))
+        .types(response.getTypes().stream().map(typeName -> typeName.getType().getName()).collect(
+            Collectors.toList()))
+        .moves(response.getMoves().stream().map(move -> move.getMoves().getName()).collect(
+            Collectors.toList()))
+        .urlImgFront(response.getSprites().getFront_default())
+        .urlImgBack(response.getSprites().getBack_default())
+        .build();
+  }
 
 }

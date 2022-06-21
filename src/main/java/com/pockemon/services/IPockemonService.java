@@ -1,11 +1,13 @@
 package com.pockemon.services;
-import com.pockemon.model.PockemonApiResponse;
-import com.pockemon.model.PockemonDetailModel;
+import com.pockemon.model.PokemonResponseDto;
+import com.pockemon.model.PokemonsResponseDto;
+import com.pockemon.model.dto.PockemonApiResponse;
+import com.pockemon.model.dto.PockemonDetailModel;
 
 
 public interface IPockemonService {
-	public PockemonApiResponse getPockemonList(String range, String page);
+	public PokemonsResponseDto getPockemonList(String range, String page);
 
-	public PockemonDetailModel getPockemonDetail(String name);
+	public PokemonResponseDto getPockemonDetail(String name);
 
 }

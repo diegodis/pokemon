@@ -1,25 +1,18 @@
 package com.pockemon.controllers;
 
+import com.pockemon.model.PokemonResponseDto;
+import com.pockemon.model.PokemonsResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pockemon.services.IPockemonService;
-import com.pockemon.model.Pockemon;
-import com.pockemon.model.PockemonApiResponse;
-import com.pockemon.model.PockemonDetailModel;
-
-import java.util.List;
+import com.pockemon.model.dto.PockemonApiResponse;
+import com.pockemon.model.dto.PockemonDetailModel;
 
 @CrossOrigin("*")
 @RestController
@@ -31,12 +24,12 @@ public class pockemonRestController {
 
 	
 	@GetMapping("/get")
-	public PockemonApiResponse index(@RequestParam String range , @RequestParam String page) {
+	public PokemonsResponseDto index(@RequestParam String range , @RequestParam String page) {
 		return pockemonService.getPockemonList(range, page);
 	}
 	
 	@GetMapping("/get/{name}")
-	public PockemonDetailModel index(@PathVariable String name) {
+	public PokemonResponseDto index(@PathVariable String name) {
 		return pockemonService.getPockemonDetail(name);
 	}
 
