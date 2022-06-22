@@ -8,10 +8,13 @@ import com.pockemon.model.dto.PockemonApiResponse;
 import com.pockemon.model.dto.PockemonDetailModel;
 import com.pockemon.model.dto.StandarLinkPockemonModel;
 import com.pockemon.repository.PokemonRepository;
+
+import java.net.http.HttpClient;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 public class PockemonServiceImpl implements IPockemonService {
@@ -21,7 +24,7 @@ public class PockemonServiceImpl implements IPockemonService {
 
   @Override
   @Cacheable(cacheNames = "pockemons", key = "{#range, #page}")
-  public PokemonsResponseDto getPockemonList(String range, String page) {
+  public PokemonsResponseDto getPockemonList(String range, String page) throws Exception {
     PockemonApiResponse response = pokemonRepository.execute(range, page);
 
     return PokemonsResponseDto.builder()
@@ -44,7 +47,7 @@ public class PockemonServiceImpl implements IPockemonService {
 
   @Override
   @Cacheable(cacheNames = "pockemon", key = "#name")
-  public PokemonResponseDto getPockemonDetail(String name) {
+  public PokemonResponseDto getPockemonDetail(String name) throws HttpClientErrorException {
     PockemonDetailModel response = pokemonRepository.executeDetail(name);
 
     return PokemonResponseDto.builder()
@@ -58,7 +61,7 @@ public class PockemonServiceImpl implements IPockemonService {
                     Collectors.toList()))
         .types(response.getTypes().stream().map(typeName -> typeName.getType().getName()).collect(
             Collectors.toList()))
-        .moves(response.getMoves().stream().map(move -> move.getMoves().getName()).collect(
+        .moves(response.getMoves().stream().map(move -> move.getMove().getName()).collect(
             Collectors.toList()))
         .urlImgFront(response.getSprites().getFront_default())
         .urlImgBack(response.getSprites().getBack_default())

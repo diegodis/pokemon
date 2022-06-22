@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pockemon.services.IPockemonService;
 import com.pockemon.model.dto.PockemonApiResponse;
 import com.pockemon.model.dto.PockemonDetailModel;
+import org.springframework.web.client.HttpClientErrorException;
 
 @CrossOrigin("*")
 @RestController
@@ -24,12 +25,12 @@ public class pockemonRestController {
 
 	
 	@GetMapping("/get")
-	public PokemonsResponseDto index(@RequestParam String range , @RequestParam String page) {
+	public PokemonsResponseDto index(@RequestParam String range , @RequestParam String page) throws Exception {
 		return pockemonService.getPockemonList(range, page);
 	}
 	
 	@GetMapping("/get/{name}")
-	public PokemonResponseDto index(@PathVariable String name) {
+	public PokemonResponseDto index(@PathVariable String name) throws HttpClientErrorException {
 		return pockemonService.getPockemonDetail(name);
 	}
 

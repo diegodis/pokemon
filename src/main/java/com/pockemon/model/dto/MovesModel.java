@@ -3,14 +3,14 @@ package com.pockemon.model.dto;
 import java.util.List;
 
 public class MovesModel {
-	private StandarLinkPockemonModel moves;
+	private StandarLinkPockemonModel move;
 	private List<VersionGrupDetailModel> version_group_details;
 	
-	public StandarLinkPockemonModel getMoves() {
-		return moves;
+	public StandarLinkPockemonModel getMove() {
+		return move;
 	}
-	public void setMoves(StandarLinkPockemonModel moves) {
-		this.moves = moves;
+	public void setMoves(StandarLinkPockemonModel move) {
+		this.move = move;
 	}
 	public List<VersionGrupDetailModel> getVersion_group_details() {
 		return version_group_details;
